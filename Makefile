@@ -6,7 +6,7 @@
 #    By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/06 16:16:17 by bedos-sa         ###   ########.fr        #
+#    Updated: 2023/09/09 18:05:14 by bedos-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ LIBS = /include
 
 RM = rm -f
 FILES = main.c \
+		frees.c \
 		linked_list.c
 OBJ_DIR = build
 
