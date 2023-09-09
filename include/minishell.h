@@ -6,7 +6,7 @@
 /*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:55:22 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/09/06 16:27:12 by bedos-sa         ###   ########.fr       */
+/*   Updated: 2023/09/09 18:09:05 by bedos-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,23 @@
 # define MINISHELL_H
 
 # include "libft.h"
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <stdio.h>
 
-typedef struct s_history
+typedef struct s_data
 {
-	char				*prompt;
-	struct s_history	*next;
-}	t_history;
+	char	**env;
+	char	**path;
+}	t_data;
 
-void	init_readline(void);
+// Main
+char		**save_path(char **envp);
+void		init_readline(void);
 
-// Linked List
-void		history_add_front(t_history **history, t_history *node);
-t_history	*history_new_node(char *content);
+// Free
+void		free_for_all(t_data	data);
+void		free_str_arrs(char **arr);
+void		free_list(t_list *list);
 
 #endif
