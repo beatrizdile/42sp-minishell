@@ -6,7 +6,7 @@
 #    By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/11 14:15:47 by bedos-sa         ###   ########.fr        #
+#    Updated: 2023/09/11 14:29:00 by bedos-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,8 @@ LIBS = /include
 RM = rm -f
 FILES = main.c \
 		frees.c \
-		builtin/exit.c
+		builtin/exit.c \
+		builtin/env.c
 OBJ_DIR = build
 BUILT_DIR = builtin
 

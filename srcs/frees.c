@@ -1,8 +1,11 @@
 #include "minishell.h"
 
-void	free_for_all(t_data	data)
+void	free_for_all(t_data	*data)
 {
-	free_str_arrs(data.path);
+	free_str_arrs(data->path);
+	if (data->temp != NULL)
+		free(data->temp);
+	free(data);
 }
 
 void	free_str_arrs(char **arr)
