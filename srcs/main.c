@@ -55,4 +55,6 @@ void	read_prompt(t_data *data)
 		exit_builtin(data);
 	else if (ft_strncmp(data->temp, "env", 3) == 0)
 		env_builtin(data);
+	else if (ft_strncmp(data->temp, "pwd", 3) == 0)
+		pwd_builtin();
 }

@@ -6,7 +6,7 @@
 /*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:55:22 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/09/11 14:56:49 by bedos-sa         ###   ########.fr       */
+/*   Updated: 2023/09/11 17:27:52 by bedos-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ void	free_list(t_list *list);
 // Builtin
 void	exit_builtin(t_data *data);
 void	env_builtin(t_data *data);
+void	pwd_builtin(void);
 
 #endif
