@@ -9,8 +9,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		data.env = envp;
 		data.path = save_path(envp);
-		init_readline();
-		free_for_all(data);
+		init_readline(data);
 	}
 	return (0);
 }
@@ -36,16 +35,18 @@ char	**save_path(char **envp)
 	return (arr);
 }
 
-void	init_readline(void)
+void	init_readline(t_data data)
 {
 	char		*temp;
 
-	int i = 0;
-	while (i++ < 4)
+	while (true)
 	{
 		temp = readline("$>");
+		if (ft_strncmp(temp, "exit", 4) == 0)
+		{
+			free(temp);
+			exit_builtin(data);
+		}
 		free(temp);
 	}
 }
-
-// valgrind --suppressions=./local.supp --leak-check=full ./minishell

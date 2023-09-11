@@ -6,7 +6,7 @@
 #    By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/09 18:05:14 by bedos-sa         ###   ########.fr        #
+#    Updated: 2023/09/11 14:15:47 by bedos-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,8 +25,9 @@ LIBS = /include
 RM = rm -f
 FILES = main.c \
 		frees.c \
-		linked_list.c
+		builtin/exit.c
 OBJ_DIR = build
+BUILT_DIR = builtin
 
 OBJS = $(addprefix $(OBJ_DIR)/, $(FILES:.c=.o))
 
@@ -39,14 +40,20 @@ $(NAME): $(OBJS)
 	@make -C $(LIBFT)
 	@$(CC) $(OBJS) $(CFLAGS) $(LIBFT)/libft.a $(FLAGS) -o $(NAME)
 
+val: 
+	valgrind --suppressions=./local.supp --leak-check=full ./minishell
+
 bonus: all
 
 $(OBJ_DIR):
 	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)/$(BUILT_DIR)
 
 clean:
 	@make clean -C $(LIBFT)
 	@$(RM) $(OBJS)
+	@rmdir $(OBJ_DIR)/$(BUILT_DIR)
+	@rmdir $(OBJ_DIR)
 
 fclean: clean
 	@make fclean -C $(LIBFT)
