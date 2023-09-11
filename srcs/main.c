@@ -2,14 +2,16 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_data	data;
+	t_data	*data;
 
 	(void) argv;
 	if (argc == 1)
 	{
-		data.env = envp;
-		data.path = save_path(envp);
+		data = ft_calloc(1, sizeof(t_data));
+		data->env = envp;
+		data->path = save_path(envp);
 		init_readline(data);
+		free_for_all(data);
 	}
 	return (0);
 }
@@ -35,18 +37,22 @@ char	**save_path(char **envp)
 	return (arr);
 }
 
-void	init_readline(t_data data)
+void	init_readline(t_data *data)
 {
-	char		*temp;
-
 	while (true)
 	{
-		temp = readline("$>");
-		if (ft_strncmp(temp, "exit", 4) == 0)
-		{
-			free(temp);
-			exit_builtin(data);
-		}
-		free(temp);
+		data->temp = readline("$>");
+		if (data->temp == NULL)
+			break ;
+		read_prompt(data);
+		free(data->temp);
 	}
+}
+
+void	read_prompt(t_data *data)
+{
+	if (ft_strncmp(data->temp, "exit", 4) == 0)
+		exit_builtin(data);
+	else if (ft_strncmp(data->temp, "env", 3) == 0)
+		env_builtin(data);
 }

@@ -6,7 +6,7 @@
 /*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/06 14:55:22 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/09/11 13:50:09 by bedos-sa         ###   ########.fr       */
+/*   Updated: 2023/09/11 14:56:49 by bedos-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,23 @@
 
 typedef struct s_data
 {
+	char	*temp;
 	char	**env;
 	char	**path;
-}	t_data;
+}			t_data;
 
 // Main
-char		**save_path(char **envp);
-void	init_readline(t_data data);
+void	read_prompt(t_data *data);
+char	**save_path(char **envp);
+void	init_readline(t_data *data);
 
 // Free
-void		free_for_all(t_data	data);
-void		free_str_arrs(char **arr);
-void		free_list(t_list *list);
+void	free_for_all(t_data *data);
+void	free_str_arrs(char **arr);
+void	free_list(t_list *list);
 
 // Builtin
-void	exit_builtin(t_data data);
+void	exit_builtin(t_data *data);
+void	env_builtin(t_data *data);
 
 #endif

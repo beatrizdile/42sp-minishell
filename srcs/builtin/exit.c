@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-void	exit_builtin(t_data data)
+void	exit_builtin(t_data *data)
 {
-		free_for_all(data);
-		exit(0);
+	free_for_all(data);
+	exit(0);
 }
 
