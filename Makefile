@@ -6,7 +6,7 @@
 #    By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/11 17:27:04 by bedos-sa         ###   ########.fr        #
+#    Updated: 2023/09/11 17:46:55 by bedos-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,7 @@ $(NAME): $(OBJS)
 	@$(CC) $(OBJS) $(CFLAGS) $(LIBFT)/libft.a $(FLAGS) -o $(NAME)
 
 val: 
-	valgrind --suppressions=./local.supp --leak-check=full ./minishell
+	valgrind --suppressions=./local.supp --leak-check=full --show-leak-kinds=all ./minishell
 
 bonus: all
 

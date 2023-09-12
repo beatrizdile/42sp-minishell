@@ -44,6 +44,8 @@ void	init_readline(t_data *data)
 		data->temp = readline("$>");
 		if (data->temp == NULL)
 			break ;
+		if (ft_strlen(data->temp) >= 1)
+			add_history(data->temp);
 		read_prompt(data);
 		free(data->temp);
 	}

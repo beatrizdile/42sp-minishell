@@ -2,6 +2,7 @@
 
 void	free_for_all(t_data	*data)
 {
+	rl_clear_history();
 	free_str_arrs(data->path);
 	if (data->temp != NULL)
 		free(data->temp);
