@@ -2,9 +2,12 @@
 
 void	env_builtin(t_data *data)
 {
-	int i;
+	t_list	*temp;
 
-	i = -1;
-	while (data->env[++i] != NULL)
-		printf("%s\n", data->env[i]);
+	temp = data->env;
+	while (temp != NULL)
+	{
+		printf("%s\n", (char *)temp->content);
+		temp = temp->next;
+	}
 }

@@ -2,7 +2,9 @@
 
 void	pwd_builtin(void)
 {
-	char	temp[1024];
+	char	*temp;
 
-	printf("%s\n", getcwd(temp, sizeof(temp)));
+	temp = getcwd(NULL, 0);
+	printf("%s\n", temp);
+	free(temp);
 }

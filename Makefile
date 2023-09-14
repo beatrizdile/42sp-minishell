@@ -6,7 +6,7 @@
 #    By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/11 17:46:55 by bedos-sa         ###   ########.fr        #
+#    Updated: 2023/09/14 10:36:09 by bedos-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,51 +16,64 @@ vpath %.c bonus
 NAME = minishell
 
 CC = cc
-FLAGS = -O3 -g3 -lreadline
-CFLAGS = -Wall -Wextra -Werror
+FLAGS = -lreadline $(LIBFT)/libft.a
+CFLAGS = -Wall -Wextra -Werror -I$(LIBS) -O3 -g3
 
 LIBFT = ./libft
-LIBS = /include
+LIBS = ./include
+OBJ_DIR = build/
+BUILT_DIR = builtin/
+SIG_DIR = signal/
+VAR_DIR = var/
 
 RM = rm -f
 FILES = main.c \
 		frees.c \
-		builtin/exit.c \
-		builtin/env.c \
-		builtin/pwd.c
-OBJ_DIR = build
-BUILT_DIR = builtin
+		save_path.c \
+		$(BUILT_DIR)exit.c \
+		$(BUILT_DIR)env.c \
+		$(BUILT_DIR)pwd.c \
+		$(BUILT_DIR)unset.c \
+		$(BUILT_DIR)export.c \
+		$(SIG_DIR)signal.c \
+		$(VAR_DIR)var_list.c
+OBJS = $(FILES:.c=.o)
 
-OBJS = $(addprefix $(OBJ_DIR)/, $(FILES:.c=.o))
 
-all: $(NAME)
+all: mkdir_obj $(NAME)
 
-$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
-	@$(CC) $(CFLAGS) -I.$(LIBS) -c $< -o $@
+$(OBJ_DIR)%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(OBJS)
-	@make -C $(LIBFT)
-	@$(CC) $(OBJS) $(CFLAGS) $(LIBFT)/libft.a $(FLAGS) -o $(NAME)
+mkdir_obj:
+	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)$(BUILT_DIR)
+	@mkdir -p $(OBJ_DIR)$(SIG_DIR)
+	@mkdir -p $(OBJ_DIR)$(VAR_DIR)
 
-val: 
-	valgrind --suppressions=./local.supp --leak-check=full --show-leak-kinds=all ./minishell
+$(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
+	@make -C $(LIBFT) --silent
+	@$(CC) $(addprefix $(OBJ_DIR), $(OBJS)) $(FLAGS) -o $(NAME)
+	@echo "\033[0;32mSUCCESS!\033[0m"
+
+run: all
+	./$(NAME)
+
+val: all
+	valgrind --suppressions=./local.supp --leak-check=full --show-leak-kinds=all ./$(NAME)
 
 bonus: all
 
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
-	@mkdir -p $(OBJ_DIR)/$(BUILT_DIR)
-
 clean:
-	@make clean -C $(LIBFT)
-	@$(RM) $(OBJS)
-	@rmdir $(OBJ_DIR)/$(BUILT_DIR)
-	@rmdir $(OBJ_DIR)
+	@make clean -C $(LIBFT) --silent
+	@$(RM) $(addprefix $(OBJ_DIR), $(OBJS))
+	@echo "\033[0;36mBUILD DIRECTORY CLEAN!\033[0m"
 
 fclean: clean
-	@make fclean -C $(LIBFT)
+	@make fclean -C $(LIBFT) --silent
 	@$(RM) $(NAME)
+	@echo "\033[0;31mBINARY DESTROYED!\033[0m"
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re bonus run val
