@@ -54,7 +54,6 @@ void	init_readline(t_data *data);
 
 /* Free */
 void	free_for_all(t_data *data);
-void	free_str_arrs(char **arr);
 void	free_list(t_list *list);
 void	free_var_list(t_var *var);
 
@@ -70,8 +69,11 @@ void	signal_handler(int signal);
 void	signal_ignore(void);
 void	signal_default(void);
 
+/* Var */
 t_var	*set_var(char *str);
-// void	init_var_list(char **env, t_data *data);
+void	new_var(t_data *data);
 void	var_add_back(t_var **lst, t_var *new);
+t_var	*find_var(t_data *data);
+void	change_value_in_var(t_data *data, t_var *node);
 
 #endif

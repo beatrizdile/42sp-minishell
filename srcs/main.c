@@ -80,12 +80,9 @@ void	read_prompt(t_data *data)
 	else if (ft_strcmp(data->prompt, "teste") == 0)
 		teste(data);
 	else if (ft_strchr(data->prompt, '=') != NULL)
-		var_add_back(&data->var, set_var(data->prompt));
+		new_var(data);
 
 }
-
-// quando vc muda o valor de uma variavel que ja existe vc
-// tem que procurar no var e mudar o conteudo
 
 // export sem argumento lista as variaveis em ordem
 // alfabetica e lista tembem as que nao tem conteudo

@@ -3,7 +3,7 @@
 void	free_for_all(t_data	*data)
 {
 	rl_clear_history();
-	free_str_arrs(data->path);
+	ft_free_str_arr(data->path);
 	if (data->env != NULL)
 		free_list(data->env);
 	if (data->prompt != NULL)
@@ -11,19 +11,6 @@ void	free_for_all(t_data	*data)
 	if (data->var != NULL)
 		free_var_list(data->var);
 	free(data);
-}
-
-void	free_str_arrs(char **arr)
-{
-	int	j;
-
-	j = 0;
-	while (arr[j])
-	{
-		free(arr[j]);
-		j++;
-	}
-	free(arr);
 }
 
 void	free_list(t_list *list)
