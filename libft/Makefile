@@ -6,7 +6,7 @@
 #    By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/31 11:45:32 by cado-car          #+#    #+#              #
-#    Updated: 2023/09/14 11:57:56 by bedos-sa         ###   ########.fr        #
+#    Updated: 2023/09/16 13:53:16 by bedos-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,8 @@ SRCS		= ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
 			ft_lstlast_bonus.c ft_lstadd_back_bonus.c ft_lstdelone_bonus.c \
 			ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstmap_bonus.c \
 			get_next_line.c get_next_line_utils.c printf_main.c \
-			printf_utils.c printf_outs.c ft_strcmp.c ft_copy_str.c ft_free_str_arr.c
+			printf_utils.c printf_outs.c ft_strcmp.c ft_copy_str.c ft_free_str_arr.c \
+			ft_list_len.c ft_swap_lst.c
 OBJS		= $(SRCS:.c=.o)
 
 all: 		$(NAME)

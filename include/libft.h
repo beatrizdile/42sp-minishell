@@ -6,7 +6,7 @@
 /*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 11:12:03 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/09/14 11:58:11 by bedos-sa         ###   ########.fr       */
+/*   Updated: 2023/09/16 13:53:03 by bedos-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 // My functions
 char	*ft_copy_str(char *copy);
 void	ft_free_str_arr(char **arr);
+int		ft_list_len(t_list *lst);
+void	ft_swap_lst(t_list *lst);
 
 // Get_next_line
 # ifndef BUFFER_SIZE

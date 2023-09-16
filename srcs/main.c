@@ -4,7 +4,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_data	*data;
 
-	(void) argv;
+	(void)argv;
 	if (argc == 1)
 	{
 		// signal(SIGINT, signal_handler);
@@ -20,7 +20,7 @@ int	main(int argc, char **argv, char **envp)
 
 void	copy_env(t_list **list, char **env)
 {
-	int		i;
+	int	i;
 
 	i = -1;
 	while (env[++i] != NULL)
@@ -55,11 +55,14 @@ static void	teste(t_data *data)
 	else
 	{
 		temp = data->var;
-		while(temp)
+		while (temp)
 		{
 			printf("str: %s\n", temp->str);
 			printf("key: %s\n", temp->key);
-			printf("value: %s\n\n", temp->value);
+			if (temp->value != NULL)
+				printf("value: %s\n", temp->value);
+			else
+				printf("value: (null)\n");
 			temp = temp->next;
 		}
 	}
@@ -73,15 +76,14 @@ void	read_prompt(t_data *data)
 		env_builtin(data);
 	else if (ft_strcmp(data->prompt, "pwd") == 0)
 		pwd_builtin();
-	else if (ft_strcmp(data->prompt, "unset") == 0)
+	else if (ft_strncmp(data->prompt, "unset", 5) == 0)
 		unset_builtin(data);
-	else if (ft_strcmp(data->prompt, "export") == 0)
+	else if (ft_strncmp(data->prompt, "export", 6) == 0)
 		export_builtin(data);
 	else if (ft_strcmp(data->prompt, "teste") == 0)
 		teste(data);
 	else if (ft_strchr(data->prompt, '=') != NULL)
 		new_var(data);
-
 }
 
 // export sem argumento lista as variaveis em ordem

@@ -64,6 +64,9 @@ void	pwd_builtin(void);
 void	unset_builtin(t_data *data);
 void	export_builtin(t_data *data);
 
+/* Builtin Utils*/
+t_list	*copy_env_list(t_list *env, t_list *lst);
+
 /* Signal */
 void	signal_handler(int signal);
 void	signal_ignore(void);

@@ -1,7 +1,6 @@
 #include "minishell.h"
 
 static void	search_unset(t_data *data, char *arr);
-// static void	ft_freenode(t_list *tmp);
 static void	ft_freenode(t_list *node, t_list *list);
 
 void	unset_builtin(t_data *data)
@@ -11,13 +10,9 @@ void	unset_builtin(t_data *data)
 
 	i = 0;
 	arr = ft_split(data->prompt, ' ');
-	while (arr[i] != NULL)
-	{
+	while (arr[++i] != NULL)
 		search_unset(data, arr[i]);
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
+	ft_free_str_arr(arr);
 }
 
 void	search_unset(t_data *data, char *arr)

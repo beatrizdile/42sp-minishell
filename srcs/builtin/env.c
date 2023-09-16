@@ -11,3 +11,13 @@ void	env_builtin(t_data *data)
 		temp = temp->next;
 	}
 }
+
+t_list	*copy_env_list(t_list *env, t_list *lst)
+{
+	while (env != NULL)
+	{
+		ft_lstadd_back(&lst, ft_lstnew(env->content));
+		env = env->next;
+	}
+	return (lst);
+}
