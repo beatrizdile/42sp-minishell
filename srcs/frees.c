@@ -15,14 +15,16 @@ void	free_for_all(t_data	*data)
 
 void	free_list(t_list *list)
 {
-	t_list	*prompt;
+	t_list	*temp;
 
-	prompt = list;
-	while (prompt != NULL)
+	temp = list;
+	while (temp != NULL)
 	{
 		list = list->next;
-		free(prompt);
-		prompt = list;
+		if (temp->content)
+			free(temp->content);
+		free(temp);
+		temp = list;
 	}
 }
 

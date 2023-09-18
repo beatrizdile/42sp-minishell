@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-static void	search_export(t_data *data, char *str);
 static void	sort_env(t_list *export);
 static void	print_export(t_list *export);
 
@@ -15,15 +14,14 @@ void	export_builtin(t_data *data)
 		sort_env(copy_env_list(data->env, export));
 	else
 	{
-		i = 0;
+		i = 1;
 		arr = ft_split(data->prompt, ' ');
 		while (arr[i] != NULL)
 		{
-			search_export(data, arr[i]);
-			free(arr[i]);
+			ft_lstadd_back(&data->env, ft_lstnew(ft_strdup(arr[i])));
 			i++;
 		}
-		free(arr);
+		ft_free_str_arr(arr);
 	}
 }
 
@@ -55,27 +53,18 @@ void	sort_env(t_list *export)
 	free_list(export);
 }
 
-static void	search_export(t_data *data, char *str)
-{
-	t_var	*temp;
-
-	temp = data->var;
-	while (temp)
-	{
-		if (ft_strcmp(temp->key, str) == 0)
-		{
-			ft_lstadd_back(&data->env, ft_lstnew(temp->str));
-			break ;
-		}
-		temp = temp->next;
-	}
-}
-
 void	print_export(t_list *export)
 {
+	char	**arr;
+
 	while (export)
 	{
-		printf("%s\n", (char *)export->content);
+		arr = ft_split((char *)export->content, '=');
+		if (arr[1])
+			printf("declare -x %s=\"%s\"\n", arr[0], arr[1]);
+		else
+			printf("declare -x %s=\"\"\n", arr[0]);
+		ft_free_str_arr(arr);
 		export = export->next;
 	}
 }
@@ -83,7 +72,8 @@ void	print_export(t_list *export)
 // caso a pessoa tente dar export em uma variavel que foi declarada
 // anteriormente ela vai para o env
 // caso a pessoa tente dar export em uma variavel que nao foi declarada
-// essa variavel é exibida apenas quando é digitado 'export'
+// essa variavel é exibida apenas quando é digitado 'export' e nao existe
+// no env
 
 // deixar o env inteiro dentro do var
 // quando chamar o env: o que tiver sinal '=' a gente printa

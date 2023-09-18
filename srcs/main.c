@@ -24,7 +24,7 @@ void	copy_env(t_list **list, char **env)
 
 	i = -1;
 	while (env[++i] != NULL)
-		ft_lstadd_back(list, ft_lstnew(env[i]));
+		ft_lstadd_back(list, ft_lstnew(ft_strdup(env[i])));
 }
 
 void	init_readline(t_data *data)

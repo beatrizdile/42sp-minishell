@@ -76,7 +76,9 @@ void	signal_default(void);
 t_var	*set_var(char *str);
 void	new_var(t_data *data);
 void	var_add_back(t_var **lst, t_var *new);
+t_list	*find_env(t_data *data);
 t_var	*find_var(t_data *data);
+void	change_value_in_env(t_data *data, t_list *node);
 void	change_value_in_var(t_data *data, t_var *node);
 
 #endif
