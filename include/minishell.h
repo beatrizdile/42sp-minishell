@@ -7,6 +7,12 @@
 # include <stdio.h>
 # include <signal.h>
 
+/* Characteres */
+# define METACHAR "<>| "
+# define BLANK "\t\n\v\f\r "
+# define S_QUOTE '\''
+# define D_QUOTES '\"'
+
 /* Error defines */
 # define SUCCESS 0
 # define FAILURE 1
@@ -16,18 +22,17 @@
 # define ERR_INVALIDARG 128
 # define ERR_CTRLC 130
 
-/* Token */
-enum e_token_types {
-	SPC = 1,
-	PIPE,
-	VAR,
-	CMD,
-	BUILTIN,
-	WORD,
+/* Lexer */
+enum e_lexeme
+{
+	INFILE = 1,
+	OUTFILE,
 	HEREDOC,
 	APPEND,
-	INFILE,
-	OUTFILE
+	PIPE,
+	BUILTIN,
+	CMD,
+	ARG
 };
 
 typedef struct s_var
@@ -44,6 +49,8 @@ typedef struct s_data
 	char	**path;
 	t_list	*env;
 	t_var	*var;
+	t_list	*token;
+	int		*lexer;
 }			t_data;
 
 /* Main */
@@ -80,5 +87,10 @@ t_list	*find_env(t_data *data);
 t_var	*find_var(t_data *data);
 void	change_value_in_env(t_data *data, t_list *node);
 void	change_value_in_var(t_data *data, t_var *node);
+
+/* Token and syntax*/
+int	tokenization(t_data *data);
+int		lex_analysis(t_data *data);
+int		syntax_analysis(int *lexer, int len);
 
 #endif

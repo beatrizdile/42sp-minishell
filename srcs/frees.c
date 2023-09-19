@@ -10,6 +10,10 @@ void	free_for_all(t_data	*data)
 		free(data->prompt);
 	if (data->var != NULL)
 		free_var_list(data->var);
+	if (data->token != NULL)
+		free_list(data->token);
+	if (data->lexer != NULL)
+		free(data->lexer);
 	free(data);
 }
 

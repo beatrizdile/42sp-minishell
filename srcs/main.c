@@ -31,7 +31,9 @@ void	init_readline(t_data *data)
 {
 	while (true)
 	{
-		data->prompt = readline("$>");
+		data->token = NULL;
+		data->lexer = NULL;
+		data->prompt = readline("$> ");
 		if (data->prompt == NULL)
 		{
 			ft_putendl_fd("exit", 1);
@@ -39,6 +41,8 @@ void	init_readline(t_data *data)
 		}
 		if (ft_strlen(data->prompt) >= 1)
 			add_history(data->prompt);
+		tokenization(data);
+		free_list(data->token);
 		read_prompt(data);
 		free(data->prompt);
 	}
