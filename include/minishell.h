@@ -6,6 +6,9 @@
 # include <readline/readline.h>
 # include <stdio.h>
 # include <signal.h>
+# include <errno.h>
+# include <string.h>
+# include <sys/wait.h>
 
 /* Characteres */
 # define METACHAR "<>| "
@@ -43,21 +46,32 @@ typedef struct s_var
 	struct s_var	*next;
 }	t_var;
 
+typedef struct s_pipex
+{
+	int		infile;
+	int		outfile;
+	char	**cmd;
+	char	**all_paths;
+}			t_pipex;
+
 typedef struct s_data
 {
 	char	*prompt;
+	char	*perline;
 	char	**path;
+	char	**env_copy;
 	t_list	*env;
 	t_var	*var;
 	t_list	*token;
 	int		*lexer;
 }			t_data;
 
-/* Main */
-void	read_prompt(t_data *data);
+/* Init */
 void	copy_env(t_list **list, char **env);
+char 	**env_copy(char **envp);
 char	**save_path(char **envp);
 void	init_readline(t_data *data);
+void	read_prompt(t_data *data);
 
 /* Free */
 void	free_for_all(t_data *data);
@@ -71,7 +85,7 @@ void	pwd_builtin(void);
 void	unset_builtin(t_data *data);
 void	export_builtin(t_data *data);
 
-/* Builtin Utils*/
+/* Builtin Utils */
 t_list	*copy_env_list(t_list *env, t_list *lst);
 
 /* Signal */
@@ -89,8 +103,21 @@ void	change_value_in_env(t_data *data, t_list *node);
 void	change_value_in_var(t_data *data, t_var *node);
 
 /* Token and syntax*/
-int	tokenization(t_data *data);
+int		tokenization(t_data *data);
 int		lex_analysis(t_data *data);
 int		syntax_analysis(int *lexer, int len);
+int		is_quoted(char c, int identifier);
+
+/* Fix input */
+void	fix_input(t_list *token, t_var *var);
+
+/* Exec */
+void	pipex(int argc, char **argv, char **envp);
+void	make_cmd(char **envp, char *command, t_pipex *pipex);
+void	cmd_search(char **envp, t_pipex *pipex);
+void	free_tab(char **tab);
+void	error_check(int i, t_pipex *pipex);
+void	pipe_it(char *cmd, char **envp, t_pipex *pipex);
+void	here_doc(char *end_msg, t_pipex *pipex);
 
 #endif

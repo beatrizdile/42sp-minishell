@@ -4,6 +4,7 @@ void	free_for_all(t_data	*data)
 {
 	rl_clear_history();
 	ft_free_str_arr(data->path);
+	ft_free_str_arr(data->env_copy);
 	if (data->env != NULL)
 		free_list(data->env);
 	if (data->prompt != NULL)

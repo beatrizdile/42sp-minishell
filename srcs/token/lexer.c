@@ -19,8 +19,8 @@ int	lex_analysis(t_data *data)
 		temp = temp->next;
 		i++;
 	}
-	// if (syntax_analysis(data->lexer, ft_lstsize(data->token)) == 0)
-	// 	return (0);
+	if (syntax_analysis(data->lexer, ft_lstsize(data->token)) == 0)
+		return (0);
 	return (1);
 }
 
@@ -88,6 +88,11 @@ static int	is_builtin(char *token)
 	return (0);
 }
 
+// char	*make_tokens_str(t_list *token)
+// {
+// 	if ()
+// }
+
 // static int	is_cmd(char *token, char **path)
 // {
 // 	int		i;
@@ -101,6 +106,8 @@ static int	is_builtin(char *token)
 // 	{
 // 		buffer = ft_strjoin("/", token);
 // 		temp = ft_strjoin(path[i], buffer);
+
+// 		printf("%s\n", temp);
 // 		if (access(temp, X_OK) == 0)
 // 		{
 // 			free(temp);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+         #
+#    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/31 11:45:32 by cado-car          #+#    #+#              #
-#    Updated: 2023/09/16 19:20:14 by bedos-sa         ###   ########.fr        #
+#    Updated: 2023/09/20 07:23:03 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ SRCS		= ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
 			ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstmap_bonus.c \
 			get_next_line.c get_next_line_utils.c printf_main.c \
 			printf_utils.c printf_outs.c ft_strcmp.c ft_free_str_arr.c \
-			ft_list_len.c ft_swap_lst.c
+			ft_list_len.c ft_swap_lst.c ft_arrsize.c
 OBJS		= $(SRCS:.c=.o)
 
 all: 		$(NAME)
