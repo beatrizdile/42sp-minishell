@@ -3,7 +3,7 @@
 static int	lexeme(char *token, t_data *data, int index);
 static int	is_builtin(char *token);
 static int	get_pos(int *lexer, int index);
-// static int	is_cmd(char *token, char **path);
+static int	check_cmd(int *lexer, int index);
 
 int	lex_analysis(t_data *data)
 {
@@ -20,7 +20,10 @@ int	lex_analysis(t_data *data)
 		i++;
 	}
 	if (syntax_analysis(data->lexer, ft_lstsize(data->token)) == 0)
+	{
+		data->exit_status = 2;
 		return (0);
+	}
 	return (1);
 }
 
@@ -44,7 +47,7 @@ static int	lexeme(char *token, t_data *data, int index)
 	}
 	if (get_pos(data->lexer, index) == 1 && is_builtin(token) == 1)
 		return (BUILTIN);
-	else if (get_pos(data->lexer, index) == 1 && ft_strchr(token, '=') == NULL)
+	else if (get_pos(data->lexer, index) == 1)
 		return (CMD);
 	return (ARG);
 }
@@ -55,6 +58,8 @@ static int	get_pos(int *lexer, int index)
 		return (1);
 	if (lexer[index - 1] == PIPE)
 		return (1);
+	if (check_cmd(lexer, index) == 0)
+		return (0);
 	if (index - 2 >= 0)
 	{
 		if (lexer[index - 2] == HEREDOC)
@@ -67,6 +72,21 @@ static int	get_pos(int *lexer, int index)
 			return (1);
 	}
 	return (0);
+}
+
+static int	check_cmd(int *lexer, int index)
+{
+	int	cmd_check;
+
+	cmd_check = 0;
+	while (--index >= 0)
+	{
+		if (lexer[index] == PIPE)
+			return (1);
+		else if (lexer[index] == CMD || lexer[index] == BUILTIN)
+			return (0);
+	}
+	return (1);
 }
 
 static int	is_builtin(char *token)
@@ -87,35 +107,3 @@ static int	is_builtin(char *token)
 		return (1);
 	return (0);
 }
-
-// char	*make_tokens_str(t_list *token)
-// {
-// 	if ()
-// }
-
-// static int	is_cmd(char *token, char **path)
-// {
-// 	int		i;
-// 	char	*temp;
-// 	char	*buffer;
-
-// 	if (access(token, X_OK) == 0)
-// 		return (1);
-// 	i = -1;
-// 	while (path[++i] != NULL)
-// 	{
-// 		buffer = ft_strjoin("/", token);
-// 		temp = ft_strjoin(path[i], buffer);
-
-// 		printf("%s\n", temp);
-// 		if (access(temp, X_OK) == 0)
-// 		{
-// 			free(temp);
-// 			free(buffer);
-// 			return (1);
-// 		}
-// 		free(temp);
-// 		free(buffer);
-// 	}
-// 	return (0);
-// }

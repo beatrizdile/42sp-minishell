@@ -1,37 +1,49 @@
 #include "minishell.h"
 
-static void	sort_env(t_list *export);
-static void	print_export(t_list *export);
-static int find_in_env(t_data *data, char	*prompt);
+static void		sort_env(t_list *export);
+static t_list	*copy_env_list(t_list *env, t_list *lst);
+static void		print_export(t_list *export);
+static int		find_in_env(t_data *data, char	*prompt);
 
-void	export_builtin(t_data *data)
+void	export_builtin(t_data *data, char **args)
 {
 	t_list	*export;
-	char	**arr;
 	int		i;
+	int		len;
 
 	export = NULL;
-	if (!ft_strcmp(data->prompt, "export"))
+	len = ft_arrsize(args);
+	if (len == 1)
 		sort_env(copy_env_list(data->env, export));
 	else
 	{
-		i = 1;
-		arr = ft_split(data->prompt, ' ');
-		if (arr[1])
-			if (!find_in_env(data, arr[1]))
-				ft_lstadd_back(&data->env, ft_lstnew(ft_strdup(arr[1])));
-		ft_free_str_arr(arr);
+		i = 0;
+		while (++i < len)
+			if (args[i])
+				if (!find_in_env(data, args[i]))
+					ft_lstadd_back(&data->env, ft_lstnew(ft_strdup(args[i])));
 	}
+	data->exit_status = 0;
 }
 
-int	find_in_env(t_data *data, char	*prompt)
+static t_list	*copy_env_list(t_list *env, t_list *lst)
+{
+	while (env != NULL)
+	{
+		ft_lstadd_back(&lst, ft_lstnew(ft_strdup(env->content)));
+		env = env->next;
+	}
+	return (lst);
+}
+
+int	find_in_env(t_data *data, char *var)
 {
 	t_list	*temp;
 	char	**arr;
 	char	**env;
 
 	temp = data->env;
-	arr = ft_split(prompt, '=');
+	arr = ft_split(var, '=');
 	while (temp)
 	{
 		env = ft_split(temp->content, '=');
@@ -40,16 +52,16 @@ int	find_in_env(t_data *data, char	*prompt)
 			if (arr[1])
 			{
 				free(temp->content);
-				temp->content = ft_strdup(prompt);
+				temp->content = ft_strdup(var);
 			}
-			ft_free_str_arr(env);
-			ft_free_str_arr(arr);
+			ft_free_str_arr(&env);
+			ft_free_str_arr(&arr);
 			return (1);
 		}
-		ft_free_str_arr(env);
+		ft_free_str_arr(&env);
 		temp = temp->next;
 	}
-	ft_free_str_arr(arr);
+	ft_free_str_arr(&arr);
 	return (0);
 }
 
@@ -92,31 +104,7 @@ void	print_export(t_list *export)
 			printf("declare -x %s=\"%s\"\n", arr[0], arr[1]);
 		else
 			printf("declare -x %s=\"\"\n", arr[0]);
-		ft_free_str_arr(arr);
+		ft_free_str_arr(&arr);
 		export = export->next;
 	}
 }
-
-// apenas permitir sobrescrever usando export
-
-// verificar se o nome de variavel é valido e o conteudo é valido
-
-// quando unset é usado, aquela variavel nao exite mais
-
-// dar export da mesma variavel de novo
-
-// quando uma pessoa for mudar uma variavel, verificar se essa variavel
-// existe dentro do env, se sim, mudar ela no env
-
-// caso a pessoa tente dar export em uma variavel que foi declarada
-// anteriormente ela vai para o env
-// caso a pessoa tente dar export em uma variavel que nao foi declarada
-// essa variavel é exibida apenas quando é digitado 'export' e nao existe
-// no env
-
-// quando chamar o env: o que tiver sinal '=' a gente printa
-// quando chamar o export: printar 'declare x' na frente e aspas
-// duplas nas variaveis
-
-//res negativo significa que a primeira string esta mais no inicio do alfabeto
-//res positivo significa que a primeira string esta mais no final do alfabeto

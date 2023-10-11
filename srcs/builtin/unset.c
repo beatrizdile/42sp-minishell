@@ -3,16 +3,14 @@
 static void	search_unset(t_data *data, char *arr);
 static void	ft_freenode(t_list *node, t_list *list);
 
-void	unset_builtin(t_data *data)
+void	unset_builtin(t_data *data, char **args)
 {
-	char	**arr;
 	int		i;
 
 	i = 0;
-	arr = ft_split(data->prompt, ' ');
-	while (arr[++i] != NULL)
-		search_unset(data, arr[i]);
-	ft_free_str_arr(arr);
+	while (args[++i] != NULL)
+		search_unset(data, args[i]);
+	data->exit_status = 0;
 }
 
 void	search_unset(t_data *data, char *arr)
@@ -39,5 +37,6 @@ static void	ft_freenode(t_list *node, t_list *list)
 	while (temp->next != node)
 		temp = temp->next;
 	temp->next = temp->next->next;
+	free(node->content);
 	free(node);
 }

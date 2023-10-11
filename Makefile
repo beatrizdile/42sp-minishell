@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
+#    By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/20 09:25:48 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/11 16:57:06 by bedos-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,35 +23,40 @@ LIBFT = ./libft
 LIBS = ./include
 OBJ_DIR = build/
 INIT_DIR = init_utils/
+FIX_INPUT_DIR = fix_input/
 BUILT_DIR = builtin/
 SIG_DIR = signal/
-VAR_DIR = var/
 TOKEN_DIR = token/
 EXEC_DIR = exec/
-FIX_INPUT_DIR = fix_input/
 
 RM = rm -f
 FILES = main.c \
 		frees.c \
 		$(INIT_DIR)init_utils.c \
+		$(INIT_DIR)get_cmd_and_builtin.c \
 		$(BUILT_DIR)exit.c \
 		$(BUILT_DIR)env.c \
 		$(BUILT_DIR)pwd.c \
 		$(BUILT_DIR)unset.c \
 		$(BUILT_DIR)export.c \
+		$(BUILT_DIR)echo.c \
+		$(BUILT_DIR)cd.c \
 		$(SIG_DIR)signal.c \
-		$(VAR_DIR)var_list.c \
 		$(TOKEN_DIR)token.c \
 		$(TOKEN_DIR)lexer.c \
 		$(TOKEN_DIR)syntax.c \
-		$(EXEC_DIR)pipex.c \
-		$(EXEC_DIR)process.c \
-		$(EXEC_DIR)here_doc.c \
-		$(EXEC_DIR)free_and_finish.c \
-		$(FIX_INPUT_DIR)fix_input.c
+		$(FIX_INPUT_DIR)fix_input.c \
+		$(FIX_INPUT_DIR)expansion.c \
+		$(FIX_INPUT_DIR)check_quotes.c \
+		$(FIX_INPUT_DIR)check_tildes.c \
+		$(FIX_INPUT_DIR)check_exit_status.c \
+		$(EXEC_DIR)exec.c \
+		$(EXEC_DIR)child_process.c \
+		$(EXEC_DIR)child_dups.c \
+		$(EXEC_DIR)pipes.c \
+		$(EXEC_DIR)here_doc.c
 		
 OBJS = $(FILES:.c=.o)
-
 
 all: mkdir_obj $(NAME)
 
@@ -63,7 +68,6 @@ mkdir_obj:
 	@mkdir -p $(OBJ_DIR)$(INIT_DIR)
 	@mkdir -p $(OBJ_DIR)$(BUILT_DIR)
 	@mkdir -p $(OBJ_DIR)$(SIG_DIR)
-	@mkdir -p $(OBJ_DIR)$(VAR_DIR)
 	@mkdir -p $(OBJ_DIR)$(TOKEN_DIR)
 	@mkdir -p $(OBJ_DIR)$(EXEC_DIR)
 	@mkdir -p $(OBJ_DIR)$(FIX_INPUT_DIR)
@@ -77,7 +81,7 @@ run: all
 	./$(NAME)
 
 val: all
-	valgrind --suppressions=./local.supp --leak-check=full --show-leak-kinds=all ./$(NAME)
+	valgrind --suppressions=./local.supp --quiet --leak-check=full --show-leak-kinds=all ./$(NAME)
 
 bonus: all
 

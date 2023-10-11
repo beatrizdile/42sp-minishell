@@ -1,21 +1,37 @@
 #include "minishell.h"
 
+void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids)
+{
+	ft_printf_fd(2, "%s: command not found\n", data->args->exec->cmd[0]);
+	free(pids);
+	ft_free_str_arr(&path);
+	ft_free_str_arr(&env);
+	free_exec(data->exec);
+	free_for_all(data);
+}
+
+void	free_builtin(t_data *data, pid_t *pids)
+{
+	free(pids);
+	free_exec(data->exec);
+	free_for_all(data);
+}
+
 void	free_for_all(t_data	*data)
 {
 	rl_clear_history();
-	ft_free_str_arr(data->path);
-	ft_free_str_arr(data->env_copy);
 	if (data->env != NULL)
 		free_list(data->env);
 	if (data->prompt != NULL)
 		free(data->prompt);
-	if (data->var != NULL)
-		free_var_list(data->var);
 	if (data->token != NULL)
 		free_list(data->token);
 	if (data->lexer != NULL)
 		free(data->lexer);
-	free(data);
+	if (data->home != NULL)
+		free(data->home);
+	if (data != NULL)
+		free(data);
 }
 
 void	free_list(t_list *list)
@@ -33,18 +49,17 @@ void	free_list(t_list *list)
 	}
 }
 
-void	free_var_list(t_var *var)
+void	free_exec(t_exec *exec)
 {
-	t_var	*temp;
+	t_exec	*temp;
 
-	temp = var;
+	temp = exec;
 	while (temp != NULL)
 	{
-		var = var->next;
-		free(temp->str);
-		free(temp->key);
-		free(temp->value);
+		exec = exec->next;
+		if (temp->cmd)
+			ft_free_str_arr(&temp->cmd);
 		free(temp);
-		temp = var;
+		temp = exec;
 	}
 }

@@ -1,19 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   ft_strdigit.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/11 14:22:01 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/10/09 20:04:18 by gcoqueir         ###   ########.fr       */
+/*   Created: 2023/10/10 10:35:15 by gcoqueir          #+#    #+#             */
+/*   Updated: 2023/10/10 11:00:08 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_putchar_fd(char c, int fd)
+int	ft_strdigit(char *str)
 {
-	write(fd, &c, 1);
+	int	i;
+	int	len;
+
+	len = ft_strlen(str);
+	if (len < 1)
+		return (0);
+	i = 0;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		i++;
+		if (str[i] == '\0')
+			return (0);
+	}
+	while (str[i] != '\0')
+	{
+		if (ft_isdigit(str[i]) == 0)
+			return (0);
+		i++;
+	}
 	return (1);
 }
