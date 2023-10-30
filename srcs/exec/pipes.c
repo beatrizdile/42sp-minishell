@@ -10,7 +10,7 @@ void	close_pipes(t_args *args)
 
 void	recycle_pipe(t_args *args)
 {
-	if (args->i % 2 == 0)
+	if (args->index % 2 == 0)
 	{
 		close(args->pipes[0]);
 		close(args->pipes[1]);

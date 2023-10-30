@@ -25,7 +25,12 @@ char	*search_and_expand_var(char *str, t_data *data)
 		}
 		else if (quoted == 2 && (str[i] == '$' && str[i + 1] != '\0'
 				&& ft_strchr(VAR_STOPER, str[i + 1]) == NULL))
-			str = expand_var(str, i, data->env);
+		{
+			if (str[i + 1] == '?')
+				str = expand_exit_status(str, i, data->exit_status);
+			else
+				str = expand_var(str, i, data->env);
+		}
 		if (str[0] == '\0')
 			break ;
 	}

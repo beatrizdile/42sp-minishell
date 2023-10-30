@@ -7,7 +7,7 @@ void	first_command(t_args *args)
 
 void	middle_command(t_args *args)
 {
-	if (args->i % 2 == 0)
+	if (args->index % 2 == 0)
 	{
 		dup2(args->pipes[0], 0);
 		dup2(args->pipis[1], 1);
@@ -21,7 +21,7 @@ void	middle_command(t_args *args)
 
 void	last_command(t_args *args)
 {
-	if (args->i % 2 == 0)
+	if (args->index % 2 == 0)
 		dup2(args->pipes[0], 0);
 	else
 		dup2(args->pipis[0], 0);

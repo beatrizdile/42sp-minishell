@@ -2,7 +2,17 @@
 
 void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids)
 {
-	ft_printf_fd(2, "%s: command not found\n", data->args->exec->cmd[0]);
+	ft_printf_fd(2, "%s: command not found\n", data->exec->cmd[0]);
+	free(pids);
+	ft_free_str_arr(&path);
+	ft_free_str_arr(&env);
+	free_exec(data->exec);
+	free_for_all(data);
+}
+
+void	free_is_dir(char **path, char **env, t_data *data, pid_t *pids)
+{
+	ft_printf_fd(2, "Is a directory\n");
 	free(pids);
 	ft_free_str_arr(&path);
 	ft_free_str_arr(&env);
@@ -54,12 +64,7 @@ void	free_exec(t_exec *exec)
 	t_exec	*temp;
 
 	temp = exec;
-	while (temp != NULL)
-	{
-		exec = exec->next;
-		if (temp->cmd)
-			ft_free_str_arr(&temp->cmd);
-		free(temp);
-		temp = exec;
-	}
+	if (temp->cmd)
+		ft_free_str_arr(&temp->cmd);
+	free(exec);
 }

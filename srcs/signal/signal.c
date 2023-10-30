@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	signal_handler(int signal)
+void	sigint_handler(int signal)
 {
 	(void)signal;
 	write(1, "\n", 1);

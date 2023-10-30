@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+         #
+#    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/11 16:57:06 by bedos-sa         ###   ########.fr        #
+#    Updated: 2023/10/30 16:22:09 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,17 +28,20 @@ BUILT_DIR = builtin/
 SIG_DIR = signal/
 TOKEN_DIR = token/
 EXEC_DIR = exec/
+REDIRECT_DIR = redirect/
+FREE_DIR = free/
 
 RM = rm -f
 FILES = main.c \
-		frees.c \
 		$(INIT_DIR)init_utils.c \
-		$(INIT_DIR)get_cmd_and_builtin.c \
+		$(BUILT_DIR)execute_builtin.c \
 		$(BUILT_DIR)exit.c \
 		$(BUILT_DIR)env.c \
 		$(BUILT_DIR)pwd.c \
 		$(BUILT_DIR)unset.c \
 		$(BUILT_DIR)export.c \
+		$(BUILT_DIR)export_utils.c \
+		$(BUILT_DIR)export_split_key_and_value.c \
 		$(BUILT_DIR)echo.c \
 		$(BUILT_DIR)cd.c \
 		$(SIG_DIR)signal.c \
@@ -54,7 +57,10 @@ FILES = main.c \
 		$(EXEC_DIR)child_process.c \
 		$(EXEC_DIR)child_dups.c \
 		$(EXEC_DIR)pipes.c \
-		$(EXEC_DIR)here_doc.c
+		$(EXEC_DIR)get_cmd_and_builtin.c \
+		$(REDIRECT_DIR)files.c \
+		$(REDIRECT_DIR)here_doc.c \
+		$(FREE_DIR)frees.c
 		
 OBJS = $(FILES:.c=.o)
 
@@ -70,7 +76,9 @@ mkdir_obj:
 	@mkdir -p $(OBJ_DIR)$(SIG_DIR)
 	@mkdir -p $(OBJ_DIR)$(TOKEN_DIR)
 	@mkdir -p $(OBJ_DIR)$(EXEC_DIR)
+	@mkdir -p $(OBJ_DIR)$(REDIRECT_DIR)
 	@mkdir -p $(OBJ_DIR)$(FIX_INPUT_DIR)
+	@mkdir -p $(OBJ_DIR)$(FREE_DIR)
 
 $(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
 	@make -C $(LIBFT) --silent

@@ -18,7 +18,7 @@ void	cd_builtin(t_data *data, char **args)
 	{
 		if (stat(args[1], &file_info) != 0)
 		{
-			ft_printf_fd(2, "cd: %s: no such file or directory\n", args[1]);
+			ft_printf_fd(2, "cd: %s: No such file or directory\n", args[1]);
 			data->exit_status = 1;
 			return ;
 		}

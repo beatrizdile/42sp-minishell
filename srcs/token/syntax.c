@@ -1,7 +1,6 @@
 #include "minishell.h"
 
 static int	syntax_aux(int *lexer, int index);
-static int	is_redirect(int value);
 
 int	syntax_analysis(int *lexer, int len)
 {
@@ -43,7 +42,7 @@ static int	syntax_aux(int *lexer, int index)
 	return (1);
 }
 
-static int	is_redirect(int value)
+int	is_redirect(int value)
 {
 	if (value == INFILE || value == OUTFILE
 		|| value == HEREDOC || value == APPEND)

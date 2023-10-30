@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+static void	read_prompt(t_data *data);
+
 void	copy_env(t_list **list, char **env, t_data *data)
 {
 	int	i;
@@ -20,9 +22,11 @@ void	init_readline(t_data *data)
 {
 	while (true)
 	{
+		// signal(SIGINT, sigint_handler);
+		signal(SIGQUIT, SIG_IGN);
 		data->token = NULL;
 		data->lexer = NULL;
-		data->prompt = readline("\033[1;35mgibi>\033[0m ");
+		data->prompt = readline("\001\033[1;35m\002gibi>\001\033[0m\002 ");
 		if (data->prompt == NULL)
 		{
 			ft_putendl_fd("exit", 1);
@@ -34,7 +38,7 @@ void	init_readline(t_data *data)
 			if (tokenization(data) == 1 && check_for_quotes(data) == 1)
 			{
 				check_var(data);
-				read_prompt(data->token, data->lexer, data);
+				read_prompt(data);
 			}
 			if (data->lexer != NULL)
 				free(data->lexer);
@@ -45,38 +49,25 @@ void	init_readline(t_data *data)
 	}
 }
 
-void	read_prompt(t_list *token, int *lexer, t_data *data)
+static void	read_prompt(t_data *data)
 {
 	int		i;
-	int		list_len;
-	t_exec	exec;
+	t_list	*temp;
 
-	list_len = ft_lstsize(token);
-	i = 0;
-	exec.cmd = NULL;
-	data->exec = &exec;
-	data->cmd_count = 0;
-	data->process_count = 1;
-	while (token != NULL)
-	{
-		if (lexer[i] == PIPE)
-			data->process_count++;
-		if (lexer[i] == CMD || lexer[i] == BUILTIN)
-			get_cmd_and_args(data, list_len, i, token);
-		token = token->next;
-		i++;
-	}
-	// t_exec *test = data->exec;
-	// while (test != NULL)
+	// if (check_heredoc(data) == 1)
 	// {
-	// 	int j = -1;
-	// 	while (test->cmd[++j] != NULL)
-	// 		printf("%s\n", test->cmd[j]);
-	// 	printf("lex: %d\n", test->lex);
-	// 	test = test->next;
+		i = -1;
+		data->process_count = 1;
+		data->builtin_check = 0;
+		temp = data->token;
+		while (temp != NULL)
+		{
+			if (data->lexer[++i] == PIPE)
+				data->process_count++;
+			if (data->process_count == 1 && data->lexer[i] == BUILTIN)
+				data->builtin_check = 1;
+			temp = temp->next;
+		}
+		execute(data);
 	// }
-	if (data->cmd_count != 0)
-		execute(data, data->exec);
-	if (data->cmd_count > 0)
-		free_exec(data->exec);
 }

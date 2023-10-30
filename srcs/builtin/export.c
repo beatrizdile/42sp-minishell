@@ -2,8 +2,8 @@
 
 static void		sort_env(t_list *export);
 static t_list	*copy_env_list(t_list *env, t_list *lst);
-static void		print_export(t_list *export);
 static int		find_in_env(t_data *data, char	*prompt);
+static int		search_key(char **env, t_list *temp, char **arr, char *var);
 
 void	export_builtin(t_data *data, char **args)
 {
@@ -20,9 +20,11 @@ void	export_builtin(t_data *data, char **args)
 		i = 0;
 		while (++i < len)
 			if (args[i])
-				if (!find_in_env(data, args[i]))
+				if (find_in_env(data, args[i]) == 0)
 					ft_lstadd_back(&data->env, ft_lstnew(ft_strdup(args[i])));
 	}
+	if (data->exit_status != 0)
+		return ;
 	data->exit_status = 0;
 }
 
@@ -36,17 +38,33 @@ static t_list	*copy_env_list(t_list *env, t_list *lst)
 	return (lst);
 }
 
-int	find_in_env(t_data *data, char *var)
+static int	find_in_env(t_data *data, char *var)
 {
 	t_list	*temp;
 	char	**arr;
 	char	**env;
 
 	temp = data->env;
-	arr = ft_split(var, '=');
+	arr = split_key_and_value(var, '=');
+	if (check_key(arr[0]) == 0)
+	{
+		ft_printf_fd(2, "export: '%s': not a valid identifier\n", arr[0]);
+		data->exit_status = 1;
+		ft_free_str_arr(&arr);
+		return (2);
+	}
+	env = NULL;
+	if (search_key(env, temp, arr, var) == 1)
+		return (1);
+	ft_free_str_arr(&arr);
+	return (0);
+}
+
+static int	search_key(char **env, t_list *temp, char **arr, char *var)
+{
 	while (temp)
 	{
-		env = ft_split(temp->content, '=');
+		env = split_key_and_value(temp->content, '=');
 		if (ft_strcmp(env[0], arr[0]) == 0)
 		{
 			if (arr[1])
@@ -61,11 +79,10 @@ int	find_in_env(t_data *data, char *var)
 		ft_free_str_arr(&env);
 		temp = temp->next;
 	}
-	ft_free_str_arr(&arr);
 	return (0);
 }
 
-void	sort_env(t_list *export)
+static void	sort_env(t_list *export)
 {
 	t_list	*temp1;
 	t_list	*temp2;
@@ -91,20 +108,4 @@ void	sort_env(t_list *export)
 	}
 	print_export(export);
 	free_list(export);
-}
-
-void	print_export(t_list *export)
-{
-	char	**arr;
-
-	while (export)
-	{
-		arr = ft_split((char *)export->content, '=');
-		if (arr[1])
-			printf("declare -x %s=\"%s\"\n", arr[0], arr[1]);
-		else
-			printf("declare -x %s=\"\"\n", arr[0]);
-		ft_free_str_arr(&arr);
-		export = export->next;
-	}
 }

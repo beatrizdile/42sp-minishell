@@ -4,38 +4,6 @@ static int	token_len(char *token);
 static void	save_token(int len, t_data *data, int index);
 static int	is_metachar(char c);
 
-// void	print_lex_and_token(t_data *data)
-// {
-// 	t_list	*temp;
-// 	int		i;
-
-// 	i = 0;
-// 	temp = data->token;
-// 	while (temp != NULL)
-// 	{
-// 		printf("token: %s    ", (char *)temp->content);
-// 		printf("lex value: %d    ", data->lexer[i]);
-// 		if (data->lexer[i] == 1)
-// 			printf("type: %s\n", "INFILE");
-// 		else if (data->lexer[i] == 2)
-// 			printf("type: %s\n", "OUTFILE");
-// 		else if (data->lexer[i] == 3)
-// 			printf("type: %s\n", "HEREDOC");
-// 		else if (data->lexer[i] == 4)
-// 			printf("type: %s\n", "APPEND");
-// 		else if (data->lexer[i] == 5)
-// 			printf("type: %s\n", "PIPE");
-// 		else if (data->lexer[i] == 6)
-// 			printf("type: %s\n", "BUILTIN");
-// 		else if (data->lexer[i] == 7)
-// 			printf("type: %s\n", "CMD");
-// 		else if (data->lexer[i] == 8)
-// 			printf("type: %s\n", "ARG");
-// 		temp = temp->next;
-// 		i++;
-// 	}
-// }
-
 int	tokenization(t_data *data)
 {
 	int		i;
@@ -60,7 +28,6 @@ int	tokenization(t_data *data)
 	}
 	if (lex_analysis(data) == 0)
 		return (0);
-	// print_lex_and_token(data);
 	return (1);
 }
 

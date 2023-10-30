@@ -9,7 +9,7 @@ void	echo_builtin(t_data *data, char **args)
 	i = 1;
 	if (len > 1)
 	{
-		if (ft_strcmp(args[1], "-n") == 0)
+		if (ft_strcmp(args[i], "-n") == 0)
 			i++;
 		if (args[i] != NULL)
 		{
