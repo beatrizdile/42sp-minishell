@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/30 16:22:09 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/31 09:23:52 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,16 +50,21 @@ FILES = main.c \
 		$(TOKEN_DIR)syntax.c \
 		$(FIX_INPUT_DIR)fix_input.c \
 		$(FIX_INPUT_DIR)expansion.c \
+		$(FIX_INPUT_DIR)expand_utils.c \
 		$(FIX_INPUT_DIR)check_quotes.c \
 		$(FIX_INPUT_DIR)check_tildes.c \
 		$(FIX_INPUT_DIR)check_exit_status.c \
 		$(EXEC_DIR)exec.c \
 		$(EXEC_DIR)child_process.c \
+		$(EXEC_DIR)finally_execute.c \
 		$(EXEC_DIR)child_dups.c \
 		$(EXEC_DIR)pipes.c \
 		$(EXEC_DIR)get_cmd_and_builtin.c \
+		$(EXEC_DIR)wait_all_process.c \
 		$(REDIRECT_DIR)files.c \
+		$(REDIRECT_DIR)deal_with_fd.c \
 		$(REDIRECT_DIR)here_doc.c \
+		$(REDIRECT_DIR)delete_heredoc.c \
 		$(FREE_DIR)frees.c
 		
 OBJS = $(FILES:.c=.o)

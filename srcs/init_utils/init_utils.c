@@ -1,6 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 10:21:20 by bedos-sa          #+#    #+#             */
+/*   Updated: 2023/11/01 10:21:21 by bedos-sa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
+static void	parse_promt(t_data *data);
 static void	read_prompt(t_data *data);
+
+int	*get_heredoc_flag(void)
+{
+	static int	heredoc_flag;
+
+	return (&heredoc_flag);
+}
 
 void	copy_env(t_list **list, char **env, t_data *data)
 {
@@ -22,10 +42,11 @@ void	init_readline(t_data *data)
 {
 	while (true)
 	{
-		// signal(SIGINT, sigint_handler);
+		signal(SIGINT, sigint_parent_process);
 		signal(SIGQUIT, SIG_IGN);
 		data->token = NULL;
 		data->lexer = NULL;
+		data->fd_heredoc = NULL;
 		data->prompt = readline("\001\033[1;35m\002gibi>\001\033[0m\002 ");
 		if (data->prompt == NULL)
 		{
@@ -33,20 +54,28 @@ void	init_readline(t_data *data)
 			break ;
 		}
 		if (ft_strlen(data->prompt) >= 1)
-		{
-			add_history(data->prompt);
-			if (tokenization(data) == 1 && check_for_quotes(data) == 1)
-			{
-				check_var(data);
-				read_prompt(data);
-			}
-			if (data->lexer != NULL)
-				free(data->lexer);
-			if (data->token != NULL)
-				free_list(data->token);
-		}
+			parse_promt(data);
 		free(data->prompt);
 	}
+}
+
+static void	parse_promt(t_data *data)
+{
+	add_history(data->prompt);
+	if (tokenization(data) == 1 && check_for_quotes(data) == 1)
+	{
+		check_var(data);
+		read_prompt(data);
+	}
+	if (data->fd_heredoc != NULL)
+	{
+		delete_heredoc_files(data);
+		free(data->fd_heredoc);
+	}
+	if (data->lexer != NULL)
+		free(data->lexer);
+	if (data->token != NULL)
+		free_list(data->token);
 }
 
 static void	read_prompt(t_data *data)
@@ -54,8 +83,9 @@ static void	read_prompt(t_data *data)
 	int		i;
 	t_list	*temp;
 
-	// if (check_heredoc(data) == 1)
-	// {
+	*get_heredoc_flag() = 0;
+	if (check_heredoc(data) == 1)
+	{
 		i = -1;
 		data->process_count = 1;
 		data->builtin_check = 0;
@@ -69,5 +99,5 @@ static void	read_prompt(t_data *data)
 			temp = temp->next;
 		}
 		execute(data);
-	// }
+	}
 }

@@ -1,69 +1,107 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   here_doc.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 10:20:21 by bedos-sa          #+#    #+#             */
+/*   Updated: 2023/11/01 10:20:22 by bedos-sa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-// static void	here_doc_utils(int *fd, char *end_msg, t_exec *exec);
-// static char	*get_line(int fd);
+static int	open_heredoc(t_data *data, int size);
+static int	open_file(char *file);
+static void	write_on_heredoc(int fd, char *end_msg, t_data *data);
 
-// void	here_doc(char *end_msg, t_exec *exec)
-// {
-// 	pid_t	pid;
-// 	int		fd[2];
+int	check_heredoc(t_data *data)
+{
+	int		i;
+	int		size;
+	t_list	*temp;
 
-// 	if (pipe(fd) == -1)
-// 		error_check(4, exec);
-// 	pid = fork();
-// 	if (pid == -1)
-// 		error_check(4, exec);
-// 	if (pid == 0)
-// 		here_doc_utils(fd, end_msg, exec);
-// 	else
-// 	{
-// 		dup2(fd[0], STDIN_FILENO);
-// 		close(fd[1]);
-// 		waitpid(pid, NULL, WNOHANG);
-// 	}
-// }
+	i = -1;
+	size = 0;
+	temp = data->token;
+	while (temp != NULL)
+	{
+		if (data->lexer[++i] == HEREDOC)
+			size++;
+		temp = temp->next;
+	}
+	if (size > 0)
+		if (open_heredoc(data, size) == 0)
+			return (0);
+	if (*get_heredoc_flag() == 1)
+	{
+		data->exit_status = 130;
+		return (0);
+	}
+	return (1);
+}
 
-// static void	here_doc_utils(int *fd, char *end_msg, t_exec *exec)
-// {
-// 	char	*temp;
+static int	open_heredoc(t_data *data, int size)
+{
+	t_list	*temp;
+	int		i;
+	int		index;
+	int		backup;
 
-// 	close(fd[0]);
-// 	while (1)
-// 	{
-// 		temp = get_line(STDIN_FILENO);
-// 		if (ft_strncmp(temp, end_msg, ft_strlen(end_msg)) == 0)
-// 		{
-// 			free(temp);
-// 			close(exec->outfile);
-// 			exit(EXIT_SUCCESS);
-// 		}
-// 		ft_putstr_fd(temp, fd[1]);
-// 		free(temp);
-// 	}
-// }
+	data->fd_heredoc = ft_calloc(sizeof(int), size);
+	temp = data->token;
+	i = -1;
+	index = 0;
+	while (temp != NULL)
+	{
+		backup = dup(0);
+		if (data->lexer[++i] == HEREDOC)
+		{
+			data->fd_heredoc[index] = open_file((char *)temp->next->content);
+			if (data->fd_heredoc[index] == -1)
+				return (0);
+			write_on_heredoc(data->fd_heredoc[index],
+				(char *)temp->next->content, data);
+			close(data->fd_heredoc[index++]);
+		}
+		dup2(backup, 0);
+		temp = temp->next;
+	}
+	return (1);
+}
 
-// static char	*get_line(int fd)
-// {
-// 	char	*temp;
-// 	char	*str;
-// 	int		bytes_read;
+static int	open_file(char *file)
+{
+	int	fd;
 
-// 	temp = malloc((BUFFER_SIZE + 1) * sizeof(char));
-// 	if (temp == NULL)
-// 		return (NULL);
-// 	str = "\0";
-// 	bytes_read = 1;
-// 	while (ft_strchr(str, '\n') == NULL && bytes_read != 0)
-// 	{
-// 		bytes_read = read(fd, temp, BUFFER_SIZE);
-// 		if (bytes_read < 0)
-// 		{
-// 			free (temp);
-// 			return (NULL);
-// 		}
-// 		temp[bytes_read] = '\0';
-// 		str = ft_strjoin(str, temp);
-// 	}
-// 	free(temp);
-// 	return (str);
-// }
+	fd = open(file, O_WRONLY | O_CREAT, 0644);
+	if (fd < 0)
+		return (-1);
+	return (fd);
+}
+
+static void	write_on_heredoc(int fd, char *end_msg, t_data *data)
+{
+	char	*temp;
+
+	while (true)
+	{
+		signal(SIGINT, sigint_heredoc);
+		signal(SIGQUIT, SIG_IGN);
+		temp = readline("> ");
+		if (temp == NULL)
+		{
+			ft_putchar_fd('\n', 1);
+			break ;
+		}
+		if (ft_strcmp(temp, end_msg) == 0)
+		{
+			free(temp);
+			break ;
+		}
+		temp = check_var_heredoc(temp, data);
+		ft_putendl_fd(temp, fd);
+		free(temp);
+	}
+}

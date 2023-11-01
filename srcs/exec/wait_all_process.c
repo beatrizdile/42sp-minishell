@@ -1,28 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   wait_all_process.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/01 10:19:13 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:19:14 by bedos-sa         ###   ########.fr       */
+/*   Created: 2023/11/01 10:20:29 by bedos-sa          #+#    #+#             */
+/*   Updated: 2023/11/01 10:20:30 by bedos-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+void	wait_all_processes(t_data *data, pid_t *pids, int flag)
 {
-	t_data	*data;
+	int	i;
 
-	(void)argv;
-	if (argc == 1)
+	i = -1;
+	if (flag == 1)
 	{
-		data = ft_calloc(1, sizeof(t_data));
-		copy_env(&data->env, envp, data);
-		init_readline(data);
-		free_for_all(data);
+		waitpid(pids[++i], &data->exit_status, 0);
+		if (WEXITSTATUS(data->exit_status))
+			data->exit_status = WEXITSTATUS(data->exit_status);
 	}
-	return (0);
+	else
+	{
+		while (++i < data->process_count)
+			waitpid(pids[i], &data->exit_status, 0);
+		if (WEXITSTATUS(data->exit_status))
+			data->exit_status = WEXITSTATUS(data->exit_status);
+	}
 }

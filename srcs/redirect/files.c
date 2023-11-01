@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   files.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 10:20:24 by bedos-sa          #+#    #+#             */
+/*   Updated: 2023/11/01 10:20:25 by bedos-sa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	verify_if_file_exists(char *file);
@@ -46,6 +58,8 @@ static int	open_redirect(int lex, char *file, int *fd_in, int *fd_out)
 	}
 	if (lex == INFILE)
 		*fd_in = open(file, O_RDONLY);
+	else if (lex == HEREDOC)
+		*fd_in = open(file, O_RDONLY);
 	else if (lex == OUTFILE)
 		*fd_out = open(file, O_RDWR | O_TRUNC | O_CREAT, 0644);
 	else if (lex == APPEND)
@@ -88,20 +102,4 @@ static int	verify_permissions(int lex, char *file)
 		}
 	}
 	return (1);
-}
-
-void	redirect_files(int fd_in, int fd_out)
-{
-	if (fd_in != -2)
-		dup2(fd_in, 0);
-	if (fd_out != -2)
-		dup2(fd_out, 1);
-}
-
-void	close_files(int fd_in, int fd_out)
-{
-	if (fd_in != -2)
-		close(fd_in);
-	if (fd_out != -2)
-		close(fd_out);
 }

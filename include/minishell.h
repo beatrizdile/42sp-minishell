@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 10:21:13 by bedos-sa          #+#    #+#             */
+/*   Updated: 2023/11/01 10:21:14 by bedos-sa         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -13,7 +25,7 @@
 
 /* Characteres */
 # define METACHAR "<>| "
-# define VAR_STOPER " \'\"/$"
+# define VAR_BLOCK " <>|?\'\"/$"
 # define BLANK "\t\n\v\f\r "
 # define S_QUOTE '\''
 # define D_QUOTES '\"'
@@ -42,7 +54,6 @@ enum	e_lexeme
 
 typedef struct s_heredoc
 {
-	char	**file;
 	int		*fd;
 }			t_heredoc;
 
@@ -75,7 +86,7 @@ typedef struct s_data
 	int		builtin_check;
 	t_args	*args;
 	int		exit_status;
-
+	int		*fd_heredoc;
 }			t_data;
 
 /* Init */
@@ -83,9 +94,11 @@ void	copy_env(t_list **list, char **env, t_data *data);
 void	init_readline(t_data *data);
 
 /* Signal */
-void	sigint_handler(int signal);
+void	sigint_parent_process(int signal);
 void	signal_ignore(void);
 void	signal_default(void);
+void	sigint_heredoc(int signal);
+int		*get_heredoc_flag(void);
 
 /* Token and syntax*/
 int		tokenization(t_data *data);
@@ -99,19 +112,23 @@ int		check_for_quotes(t_data *data);
 void	check_var(t_data *data);
 char	*expand_exit_status(char *str, int index, int exit_status);
 char	*search_and_expand_var(char *str, t_data *data);
+char	*expand_utils(t_data *data, char *str, int i);
 void	check_tildes(t_list *token, char *home);
 char	*search_and_remove_quotes(char *str);
+char	*check_heredoc_var(char *str, t_data *data);
+char	*get_key(char *str, int start, int end);
+char	*check_var_heredoc(char *str, t_data *data);
 
 /* Exec */
 void	execute(t_data *data);
 void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids);
-void	first_command(t_args *args);
-void	middle_command(t_args *args);
-void	last_command(t_args *args);
+void	deal_with_pipes(t_data *data);
 void	get_cmd_and_args(t_list *token, int *lexer, t_data *data);
+void	finally_execute(t_data *data, int fd[], pid_t *pids);
 void	close_pipes(t_args *args);
 void	recycle_pipe(t_args *args);
 void	execute_builtin(t_data *data, t_exec *exec, pid_t *pids);
+void	wait_all_processes(t_data *data, pid_t *pids, int flag);
 
 /* Builtin */
 void	exit_builtin(t_data *data, pid_t *pids, char **args);
@@ -129,10 +146,11 @@ void	cd_builtin(t_data *data, char **args);
 int		validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out);
 void	redirect_files(int fd_in, int fd_out);
 void	close_files(int fd_in, int fd_out);
+int		check_heredoc(t_data *data);
+void	delete_heredoc_files(t_data *data);
 
 /* Free */
 void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids);
-void	free_is_dir(char **path, char **env, t_data *data, pid_t *pids);
 void	free_builtin(t_data *data, pid_t *pids);
 void	free_for_all(t_data *data);
 void	free_list(t_list *list);

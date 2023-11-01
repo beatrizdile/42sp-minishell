@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   delete_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/01 10:19:13 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:19:14 by bedos-sa         ###   ########.fr       */
+/*   Created: 2023/11/01 10:20:16 by bedos-sa          #+#    #+#             */
+/*   Updated: 2023/11/01 10:20:17 by bedos-sa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+void	delete_heredoc_files(t_data *data)
 {
-	t_data	*data;
+	t_list	*temp;
+	int		i;
 
-	(void)argv;
-	if (argc == 1)
+	temp = data->token;
+	i = -1;
+	while (temp != NULL)
 	{
-		data = ft_calloc(1, sizeof(t_data));
-		copy_env(&data->env, envp, data);
-		init_readline(data);
-		free_for_all(data);
+		if (data->lexer[++i] == HEREDOC)
+			unlink((char *)temp->next->content);
+		temp = temp->next;
 	}
-	return (0);
 }
