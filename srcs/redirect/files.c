@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   files.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 10:20:24 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:20:25 by bedos-sa         ###   ########.fr       */
+/*   Updated: 2023/11/01 14:44:28 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static int	verify_if_file_exists(char *file);
 static int	verify_permissions(int lex, char *file);
 static int	open_redirect(int lex, char *file, int *fd_in, int *fd_out);
+static int	verifications(char *temp, int lex);
 
 int	validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out)
 {
@@ -47,7 +48,9 @@ int	validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out)
 static int	open_redirect(int lex, char *file, int *fd_in, int *fd_out)
 {
 	struct stat	file_info;
+	char		*temp;
 
+	temp = ft_strdup(file);
 	if (stat(file, &file_info) == 0)
 	{
 		if (S_ISDIR(file_info.st_mode))
@@ -59,16 +62,16 @@ static int	open_redirect(int lex, char *file, int *fd_in, int *fd_out)
 	if (lex == INFILE)
 		*fd_in = open(file, O_RDONLY);
 	else if (lex == HEREDOC)
-		*fd_in = open(file, O_RDONLY);
+	{
+		free(temp);
+		temp = ft_strjoin("/tmp/", file);
+		*fd_in = open(temp, O_RDONLY);
+	}
 	else if (lex == OUTFILE)
 		*fd_out = open(file, O_RDWR | O_TRUNC | O_CREAT, 0644);
 	else if (lex == APPEND)
 		*fd_out = open(file, O_RDWR | O_APPEND | O_CREAT, 0644);
-	if (verify_if_file_exists(file) == 0)
-		return (2);
-	if (verify_permissions(lex, file) == 0)
-		return (3);
-	return (1);
+	return (verifications(temp, lex));
 }
 
 static int	verify_if_file_exists(char *file)
@@ -101,5 +104,21 @@ static int	verify_permissions(int lex, char *file)
 			return (0);
 		}
 	}
+	return (1);
+}
+
+static int	verifications(char *temp, int lex)
+{
+	if (verify_if_file_exists(temp) == 0)
+	{
+		free(temp);
+		return (2);
+	}
+	if (verify_permissions(lex, temp) == 0)
+	{
+		free(temp);
+		return (3);
+	}
+	free(temp);
 	return (1);
 }

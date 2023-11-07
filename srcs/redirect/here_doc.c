@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 10:20:21 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:20:22 by bedos-sa         ###   ########.fr       */
+/*   Updated: 2023/11/01 13:47:49 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,12 @@ static int	open_heredoc(t_data *data, int size)
 
 static int	open_file(char *file)
 {
-	int	fd;
+	int		fd;
+	char	*temp;
 
-	fd = open(file, O_WRONLY | O_CREAT, 0644);
+	temp = ft_strjoin("/tmp/", file);
+	fd = open(temp, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	free(temp);
 	if (fd < 0)
 		return (-1);
 	return (fd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 10:21:13 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:21:14 by bedos-sa         ###   ########.fr       */
+/*   Updated: 2023/11/01 14:00:21 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,6 @@ enum	e_lexeme
 	CMD,
 	ARG
 };
-
-typedef struct s_heredoc
-{
-	int		*fd;
-}			t_heredoc;
 
 typedef struct s_exec
 {
@@ -129,6 +124,8 @@ void	close_pipes(t_args *args);
 void	recycle_pipe(t_args *args);
 void	execute_builtin(t_data *data, t_exec *exec, pid_t *pids);
 void	wait_all_processes(t_data *data, pid_t *pids, int flag);
+void	verify_permission(char *copy, char **cmd, char **env);
+int		verify(int result, char *str, char **cmd, char **env);
 
 /* Builtin */
 void	exit_builtin(t_data *data, pid_t *pids, char **args);
@@ -147,7 +144,6 @@ int		validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out);
 void	redirect_files(int fd_in, int fd_out);
 void	close_files(int fd_in, int fd_out);
 int		check_heredoc(t_data *data);
-void	delete_heredoc_files(t_data *data);
 
 /* Free */
 void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids);

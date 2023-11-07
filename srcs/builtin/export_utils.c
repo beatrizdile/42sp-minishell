@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 10:21:01 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:21:02 by bedos-sa         ###   ########.fr       */
+/*   Updated: 2023/11/01 14:35:35 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,14 @@
 
 int	check_key(char *str)
 {
-	int	i;
-
-	i = 0;
 	if (str == NULL)
 		return (0);
-	while (str[i] != '\0')
+	if (ft_isalpha(str[0]) != 1 && str[0] != '_')
 	{
-		if (ft_isalpha(str[i]) == 1 || str[i] == '_')
-			i++;
-		else
-			break ;
+		printf("aaaa\n");
+		return (0);
 	}
-	if (str[i] == '\0')
-		return (1);
-	return (0);
+	return (1);
 }
 
 void	print_export(t_list *export)

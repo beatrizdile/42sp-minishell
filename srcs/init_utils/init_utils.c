@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 10:21:20 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:21:21 by bedos-sa         ###   ########.fr       */
+/*   Updated: 2023/11/01 14:19:48 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,7 @@ static void	parse_promt(t_data *data)
 		read_prompt(data);
 	}
 	if (data->fd_heredoc != NULL)
-	{
-		delete_heredoc_files(data);
 		free(data->fd_heredoc);
-	}
 	if (data->lexer != NULL)
 		free(data->lexer);
 	if (data->token != NULL)

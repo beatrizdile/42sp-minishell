@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   delete_heredoc.c                                   :+:      :+:    :+:   */
+/*   verify.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/01 10:20:16 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:20:17 by bedos-sa         ###   ########.fr       */
+/*   Created: 2023/11/01 11:14:55 by gcoqueir          #+#    #+#             */
+/*   Updated: 2023/11/01 11:14:56 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	delete_heredoc_files(t_data *data)
+int	verify(int result, char *str, char **cmd, char **env)
 {
-	t_list	*temp;
-	int		i;
-
-	temp = data->token;
-	i = -1;
-	while (temp != NULL)
+	if (result == 0)
 	{
-		if (data->lexer[++i] == HEREDOC)
-			unlink((char *)temp->next->content);
-		temp = temp->next;
+		verify_permission(str, cmd, env);
+		return (0);
 	}
+	return (-1);
 }

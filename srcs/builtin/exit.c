@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 10:21:50 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:21:51 by bedos-sa         ###   ########.fr       */
+/*   Updated: 2023/11/01 14:08:33 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ void	exit_builtin(t_data *data, pid_t *pids, char **args)
 	if (ft_arrsize(args) > 2)
 	{
 		ft_printf_fd(2, "exit: too many arguments\n");
-		data->exit_status = 1;
-		return ;
+		free_builtin(data, pids);
+		exit(2);
 	}
 	if (ft_arrsize(args) == 2)
 	{
 		if (ft_strdigit(args[1]) == 0)
 		{
 			ft_printf_fd(2, "exit: numeric argument required\n");
-			data->exit_status = 2;
-			return ;
+			free_builtin(data, pids);
+			exit(2);
 		}
 		if (args[1])
 			num = ft_atol(args[1]);

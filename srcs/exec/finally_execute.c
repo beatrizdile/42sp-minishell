@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   finally_execute.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 10:20:40 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:20:41 by bedos-sa         ###   ########.fr       */
+/*   Updated: 2023/11/01 14:04:08 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,27 @@
 
 static char	**turn_env_to_arr(t_list *env);
 static char	**find_path(char **env);
-static void	try_paths(t_exec *exec, char **path, char **env);
+static int	try_paths(t_exec *exec, char **path, char **env);
 
 void	finally_execute(t_data *data, int fd[], pid_t *pids)
 {
 	char	**env;
 	char	**path;
 	int		backup_exit_status;
+	int		result;
 
 	if (data->exec->lex == CMD)
 	{
 		env = turn_env_to_arr(data->env);
 		path = find_path(env);
-		try_paths(data->exec, path, env);
+		result = try_paths(data->exec, path, env);
 		close_files(fd[0], fd[1]);
+		if (result == 127)
+			ft_printf_fd(2, "%s: command not found\n", data->exec->cmd[0]);
+		else
+			ft_printf_fd(2, "%s: permission denied\n", data->exec->cmd[0]);
 		free_cmd_not_found(path, env, data, pids);
-		exit(127);
+		exit(result);
 	}
 	execute_builtin(data, data->exec, pids);
 	close_files(fd[0], fd[1]);
@@ -80,27 +85,37 @@ static char	**find_path(char **env)
 	return (paths);
 }
 
-static void	try_paths(t_exec *exec, char **path, char **env)
+static int	try_paths(t_exec *exec, char **path, char **env)
 {
-	int			i;
-	int			strlen;
-	char		*copy;
+	int		i;
+	int		strlen;
+	char	*copy;
 
-	if (access(exec->cmd[0], F_OK) == 0)
-		execve(exec->cmd[0], exec->cmd, env);
-	i = 0;
+	if (verify(access(exec->cmd[0], F_OK), exec->cmd[0], exec->cmd, env) == 0)
+		return (126);
+	i = -1;
 	if (path != NULL)
 	{
-		while (path[i])
+		while (path[++i])
 		{
 			strlen = ft_strlen(path[i]) + ft_strlen(exec->cmd[0]) + 1;
 			copy = ft_calloc(strlen, sizeof(char));
 			ft_strlcat(copy, path[i], strlen);
 			ft_strlcat(copy, exec->cmd[0], strlen);
 			if (access(copy, F_OK) == 0)
-				execve(copy, exec->cmd, env);
+			{
+				verify_permission(copy, exec->cmd, env);
+				free(copy);
+				return (126);
+			}
 			free(copy);
-			i++;
 		}
 	}
+	return (127);
+}
+
+void	verify_permission(char *copy, char **cmd, char **env)
+{
+	if (access(copy, X_OK) == 0)
+		execve(copy, cmd, env);
 }
