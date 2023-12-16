@@ -8,7 +8,7 @@
 
   ![minishell_logo](https://github.com/beatrizdile/beatrizdile-utils/blob/master/minishellm.png)
 </h2>
-  Minishell is a project designed to give you hands-on experience in building a basic Unix-like shell. In this project, you will develop a simplified shell that allows users to interact with the operating system through a command-line interface. The goal is to implement core features of a shell, including command execution, built-in commands, input/output redirection, and the use of pipes.
+  Minishell is a project designed to give you hands-on experience in building a basic Unix-like shell. In this project, it was developed a simplified shell that allows users to interact with the operating system through a command-line interface. The goal is to implement core features of a shell, including command execution, built-in commands, input/output redirection, and the use of pipes.
   Inside this repository, you can see all the code that has been created for the Minishell project, including the mandatory part and the bonus part. The project was done in collaboration with <a href="https://github.com/GiovannaCoqueiro">Giovanna Coqueiro</a>
 
 
