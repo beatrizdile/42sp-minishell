@@ -39,7 +39,7 @@
 
 you can run it with:
 ```sh
-  $> ./minishell
+./minishell
 ```
 
 ---
@@ -62,7 +62,7 @@ you can run it with:
 Clone this repository in you local computer using a terminal:
 
 ```sh
-$> git clone git@github.com:beatrizdile/42sp-minishell.git
+git clone git@github.com:beatrizdile/42sp-minishell.git
 ```
 
 After cloning the project in your local reposiory you can run some commands you can find in Makefile:
